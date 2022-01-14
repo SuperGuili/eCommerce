@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Category>
 
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Category List";
+    Category labels = Model.FirstOrDefault();
 }
 
 <div class="container p-3">
@@ -16,32 +16,43 @@
     </div>
 </div>
 
-<table class="table table-bordered table-striped" style="width:100%">
+<table class="table table-bordered table-striped text-center" style="width:100%">
     <thead>
         <tr>
             <th>
-                Category Name
+                <label asp-for="@labels.CategoryName"></label>
             </th>
             <th>
-                Display Order
+                <label asp-for="@labels.DisplayOrder"></label>
             </th>
             <th>
-                Created Date
+                <label asp-for="@labels.CategoryCreatedDateTime"></label>
             </th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var obj in Model)
         {
             <tr>
-                <td style="width:33%">
+                <td style="width:35%" class="text-start">
                     @obj.CategoryName
                 </td>
-                <td style="width:33%">
+                <td style="width:10%">
                     @obj.DisplayOrder
                 </td>
-                <td style="width:33%">
+                <td style="width:20%">
                     @obj.CategoryCreatedDateTime
+                </td>
+                <td style="width:35%">
+                    <div class="btn-group w-75" role="group">
+                        <a class="btn btn-info btn-sm mx-2" asp-controller="Category" asp-action="EditCategory" asp-route-Id="@obj.Id">
+                            <i class="bi bi-pencil-square"></i>&nbsp;Edit
+                        </a>
+                        <a class="btn btn-danger btn-sm mx-2" asp-controller="Category" asp-action="DeleteCategory" asp-route-Id="@obj.Id">
+                            <i class="bi bi-trash"></i>&nbsp;Delete
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
