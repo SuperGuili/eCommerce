@@ -1,4 +1,4 @@
-﻿using eCommerceWebApp.Models;
+﻿using eCommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
