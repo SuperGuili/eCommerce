@@ -1,4 +1,5 @@
 ﻿using eCommerce.DataAccess;
+using eCommerce.DataAccess.Repository.IRepository;
 using eCommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +7,16 @@ namespace eCommerceWebApp.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryController(ApplicationDbContext dbContext)
+        public CategoryController(IUnitOfWork dbContext)
         {
-            _dbContext = dbContext;
+            _unitOfWork = dbContext;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> categoryList = _dbContext.Categories.OrderBy(c => c.DisplayOrder);
+            IEnumerable<Category> categoryList = _unitOfWork.Category.GetAll();
 
             return View(categoryList);
         }
@@ -38,9 +39,9 @@ namespace eCommerceWebApp.Controllers
                     DisplayOrder = model.DisplayOrder
                 };
 
-                _dbContext.Categories.Add(category);
+                _unitOfWork.Category.Add(category);
 
-                _dbContext.SaveChanges();
+                _unitOfWork.Save();
 
                 TempData["success"] = "Category Created Succesfully";
 
@@ -58,8 +59,8 @@ namespace eCommerceWebApp.Controllers
                 return NotFound();
             }
 
-            Category category = _dbContext.Categories.Find(Id);
-            //Category category = _dbContext.Categories.FirstOrDefault(c => c.Id==Id);
+            //Category category = _dbContext.Categories.Find(Id);
+            Category category = _unitOfWork.Category.GetFirstOrDefault(c => c.Id==Id);
             //Category category = _dbContext.Categories.SingleOrDefault(c => c.Id==Id);
 
             if (category == null)
@@ -77,9 +78,9 @@ namespace eCommerceWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _dbContext.Categories.Update(model);
+                _unitOfWork.Category.Update(model);
 
-                _dbContext.SaveChanges();
+                _unitOfWork.Save();
 
                 TempData["success"] = "Category Updated Succesfully";
 
@@ -97,7 +98,7 @@ namespace eCommerceWebApp.Controllers
                 return NotFound();
             }
 
-            Category category = _dbContext.Categories.Find(Id);
+            Category category = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == Id);
             //Category category = _dbContext.Categories.FirstOrDefault(c => c.Id==Id);
             //Category category = _dbContext.Categories.SingleOrDefault(c => c.Id==Id);
 
@@ -118,9 +119,12 @@ namespace eCommerceWebApp.Controllers
             {
                 return NotFound();
             }
-            _dbContext.Categories.Remove(model);
 
-            _dbContext.SaveChanges();
+            var obj = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == model.Id);
+
+            _unitOfWork.Category.Remove(obj);
+
+            _unitOfWork.Save();
 
             TempData["success"] = "Category Deleted Succesfully";
 
