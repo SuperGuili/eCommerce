@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerceWebApp.Controllers
 {
+    [Area("Admin")]
     public class TagController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
