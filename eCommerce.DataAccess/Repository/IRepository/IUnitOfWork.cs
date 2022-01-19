@@ -12,6 +12,8 @@ namespace eCommerce.DataAccess.Repository.IRepository
 
         ITagRepository Tag { get; }
 
+        IProductRepository Product { get; }
+
         void Save();
     }
 }

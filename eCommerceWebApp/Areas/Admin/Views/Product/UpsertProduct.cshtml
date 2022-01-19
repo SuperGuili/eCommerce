@@ -1,0 +1,69 @@
+﻿@model Product
+
+<form method="post" asp-action="Upsert">
+
+    <div class="border p-3 mt-4">
+
+        <div class="row pb-2">
+            <h2>Edit Product</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3 ">
+            <label asp-for="ProductName"></label>
+            <input asp-for="ProductName" class="form-control" />
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="ProductDescription"></label>
+            <textarea asp-for="ProductDescription" rows="3" class="form-control"></textarea>
+            <span asp-validation-for="ProductDescription" class="text-danger" ></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="ListPrice"></label>
+            <input asp-for="ListPrice" class="form-control"/>
+            <span asp-validation-for="ListPrice" class="text-danger" ></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="Price"></label>
+            <input asp-for="Price" class="form-control"/>
+            <span asp-validation-for="Price" class="text-danger" ></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="Price10"></label>
+            <input asp-for="Price10" class="form-control"/>
+            <span asp-validation-for="Price10" class="text-danger" ></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="Price20"></label>
+            <input asp-for="Price20" class="form-control"/>
+            <span asp-validation-for="Price20" class="text-danger" ></span>
+        </div>
+                <div class="mb-3 ">
+            <label asp-for="StockQuantity"></label>
+            <input asp-for="StockQuantity" class="form-control"/>
+            <span asp-validation-for="StockQuantity" class="text-danger" ></span>
+        </div>
+        <div class="mb-3 ">
+            <label asp-for="CategoryId"></label>
+            <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-select">
+                <option disabled selected>--Select Category--</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger" ></span>
+        </div>
+        <div class="row pb-3">
+            <hr />
+        </div>
+        <button type="submit" class="btn btn-success" style="width:175px"><i class="bi bi-plus-circle"></i>&nbsp;Update Tag</button>
+        <a class="btn btn-danger" style="width:175px" asp-controller="Product" asp-action="Index"><i class="bi bi-skip-backward-circle"></i>&nbsp; Back to List</a>
+
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+}
