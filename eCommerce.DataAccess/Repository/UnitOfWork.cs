@@ -1,9 +1,4 @@
 ﻿using eCommerce.DataAccess.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eCommerce.DataAccess.Repository
 {
@@ -15,9 +10,12 @@ namespace eCommerce.DataAccess.Repository
         {
             _db = db;
             Category = new CategoryRepository(_db);
+            Tag = new TagRepository(_db);
         }
 
         public ICategoryRepository Category { get; private set; }
+
+        public ITagRepository Tag { get; private set;}
 
         public void Save()
         {

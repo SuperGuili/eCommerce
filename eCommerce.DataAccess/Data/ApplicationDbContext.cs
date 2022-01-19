@@ -10,5 +10,7 @@ namespace eCommerce.DataAccess
         }
 
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
     }
 }

@@ -10,6 +10,8 @@ namespace eCommerce.DataAccess.Repository.IRepository
     {
         ICategoryRepository Category { get; }
 
+        ITagRepository Tag { get; }
+
         void Save();
     }
 }

@@ -1,0 +1,34 @@
+﻿@model eCommerce.Models.Tag
+
+<form method="post">
+
+    <div class="border p-3 mt-4 col-6">
+
+        <div class="row pb-2">
+            <h2>Create Tag</h2>
+            <hr />
+        </div>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3 ">
+            <label asp-for="TagName"></label>
+            <input asp-for="TagName" class="form-control" />
+            <span asp-validation-for="TagName" class="text-danger"></span>
+        </div>
+
+        <div class="row pb-3">
+            <hr />
+        </div>
+        <button type="submit" class="btn btn-success" style="width:175px"><i class="bi bi-plus-circle"></i>&nbsp;Add Tag</button>
+        <a class="btn btn-danger" style="width:175px" asp-controller="Tag" asp-action="Index"><i class="bi bi-skip-backward-circle"></i>&nbsp;Back to List</a>
+
+    </div>
+
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+}
+
