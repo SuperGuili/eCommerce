@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,21 +21,22 @@ namespace eCommerce.Models
         public string ProductDescription { get; set; }
 
         [Required]
-        [Range(0,10000)]
+        [Range(0.01,10000)]
         public double ListPrice { get; set; }
 
         [Required]
-        [Range(0, 10000)]
+        [Range(0.01, 10000)]
         public double Price { get; set; }
 
         [Required]
-        [Range(0, 10000)]
+        [Range(0.01, 10000)]
         public double Price10 { get; set; }
 
         [Required]
-        [Range(0, 10000)]
+        [Range(0.01, 10000)]
         public double Price20 { get; set; }
 
+        [ValidateNever]
         public string ImageUrl { get; set; }
 
         [Required]
@@ -44,12 +46,14 @@ namespace eCommerce.Models
         public int CategoryId { get; set; }
 
         [ForeignKey("CategoryId")]
+        [ValidateNever]
         public Category Category { get; set; }
 
         [Required]
         public int TagId { get; set; }
 
         [ForeignKey("TagId")]
+        [ValidateNever]
         public Tag  Tag { get; set; }
     }
 }

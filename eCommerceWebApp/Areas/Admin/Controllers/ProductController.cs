@@ -1,6 +1,7 @@
 ﻿using eCommerce.DataAccess;
 using eCommerce.DataAccess.Repository.IRepository;
 using eCommerce.Models;
+using eCommerce.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -10,10 +11,12 @@ namespace eCommerceWebApp.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(IUnitOfWork dbContext)
+        public ProductController(IUnitOfWork dbContext, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = dbContext;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -26,26 +29,25 @@ namespace eCommerceWebApp.Controllers
         [HttpGet]
         public IActionResult UpsertProduct(int? Id)
         {
-            Product product = new();
-            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(
-                c => new SelectListItem
+            ProductVM productVM = new()
+            {
+                Product = new(),
+                CategoryList = _unitOfWork.Category.GetAll().Select(c => new SelectListItem
                 {
                     Text = c.CategoryName,
                     Value = c.Id.ToString()
-                });
-
-            IEnumerable<SelectListItem> TagList = _unitOfWork.Tag.GetAll().Select(
-                t => new SelectListItem
+                }),
+                TagList = _unitOfWork.Tag.GetAll().Select(c => new SelectListItem
                 {
-                    Text = t.TagName,
-                    Value = t.Id.ToString()
-                });
+                    Text = c.TagName,
+                    Value = c.Id.ToString()
+                }),
+            };
 
             if (Id == null || Id == 0)
             {
                 //Create product
-                ViewBag.CategoryList = CategoryList;
-                return View(product);
+                return View(productVM);
             }
             else
             {
@@ -54,21 +56,40 @@ namespace eCommerceWebApp.Controllers
 
 
 
-            return View(product);
+            return View(productVM);
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpsertProduct(Category model)
+        public IActionResult UpsertProduct(ProductVM model, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Update(model);
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString(); //Generate GUID for the file name.
+                    var uploadsPath = Path.Combine(wwwRootPath, @"images\products"); //Find the path to save file.
+                    var extension = Path.GetExtension(file.FileName); //Get the file extension to keep it the same
+
+                    //Create a file stream object to save the file
+                    using (var fileStreams = new FileStream(Path.Combine(uploadsPath, fileName + extension), FileMode.Create))
+                    {
+                        //Copy the file
+                        file.CopyTo(fileStreams);
+                    }
+                    //Save the file path and name on the database
+                    model.Product.ImageUrl = @"\images\products\" + fileName + extension;
+
+                }
+
+                _unitOfWork.Product.Add(model.Product);
 
                 _unitOfWork.Save();
 
-                TempData["success"] = "Category Updated Succesfully";
+                TempData["success"] = "Product Created Succesfully";
 
                 return RedirectToAction("Index");
             }
