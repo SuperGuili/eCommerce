@@ -17,7 +17,8 @@ namespace eCommerce.DataAccess.Repository
         public Repository(ApplicationDbContext dbContext)
         {
             _db = dbContext;
-            dbSet = _db.Set<T>();
+            this.dbSet = _db.Set<T>();
+            //_db.Products.Include(x => x.Category).Include(x => x.Tag);
         }
 
         public void Add(T entity)
@@ -25,18 +26,37 @@ namespace eCommerce.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        // includeProperties - "Category,Tag"
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (includeProperties != null)
+            {
+                // Loop for includeProperties - separate values at "," and remove empties...
+                foreach (var prop in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(prop);
+                }
+            }
 
             return query.ToList();
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
 
             query = query.Where(filter);
+
+            if (includeProperties != null)
+            {
+                // Loop for includeProperties - separate values at "," and remove empties...
+                foreach (var prop in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(prop);
+                }
+            }
 
             return query.FirstOrDefault();
         }

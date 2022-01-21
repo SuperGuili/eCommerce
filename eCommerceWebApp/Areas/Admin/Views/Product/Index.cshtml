@@ -13,23 +13,26 @@
     </div>
 
 
-    <table class="table table-bordered table-striped text-center" style="width:100%">
+    <table id="productTable" class="table table-bordered table-striped text-center" style="width:100%">
         <thead>
             <tr>
                 <th>
                     Product Name
                 </th>
-                <th>
+                @*<th>
                     Description
+                </th>*@
+                <th>
+                    Stock Quantity
                 </th>
                 <th>
                     Price
                 </th>
                 <th>
-                    Stock Quantity
+                    Category
                 </th>
                 <th>
-                    Category
+                    Tag
                 </th>
                 <th>
                     Actions
@@ -39,3 +42,6 @@
     </table>
 </div>
 
+@section Scripts{
+    <script src="~/js/product.js"></script>
+}

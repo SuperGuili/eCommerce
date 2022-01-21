@@ -22,18 +22,22 @@ namespace eCommerce.Models
 
         [Required]
         [Range(0.01,10000)]
+        [Display(Name = "List Price")]
         public double ListPrice { get; set; }
 
         [Required]
         [Range(0.01, 10000)]
+        [Display(Name = "Price for 1-10")]
         public double Price { get; set; }
 
         [Required]
         [Range(0.01, 10000)]
+        [Display(Name = "Price for 10-20")]
         public double Price10 { get; set; }
 
         [Required]
         [Range(0.01, 10000)]
+        [Display(Name = "Price for 20+")]
         public double Price20 { get; set; }
 
         [ValidateNever]
@@ -43,6 +47,7 @@ namespace eCommerce.Models
         public int StockQuantity { get; set; }
 
         [Required]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         [ForeignKey("CategoryId")]
@@ -50,6 +55,7 @@ namespace eCommerce.Models
         public Category Category { get; set; }
 
         [Required]
+        [Display(Name ="Tag")]
         public int TagId { get; set; }
 
         [ForeignKey("TagId")]

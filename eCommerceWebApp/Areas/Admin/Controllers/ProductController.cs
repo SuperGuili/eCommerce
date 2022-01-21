@@ -21,13 +21,11 @@ namespace eCommerceWebApp.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.Product.GetAll();
-
-            return View(productList);
+            return View();
         }
 
         [HttpGet]
-        public IActionResult UpsertProduct(int? Id)
+        public IActionResult UpsertProduct(int? id)
         {
             ProductVM productVM = new()
             {
@@ -44,7 +42,7 @@ namespace eCommerceWebApp.Controllers
                 }),
             };
 
-            if (Id == null || Id == 0)
+            if (id == null || id == 0)
             {
                 //Create product
                 return View(productVM);
@@ -52,11 +50,10 @@ namespace eCommerceWebApp.Controllers
             else
             {
                 //Update Product
+                productVM.Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id);
+
+                return View(productVM);
             }
-
-
-
-            return View(productVM);
 
         }
 
@@ -66,7 +63,21 @@ namespace eCommerceWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Get the wwwroot path
                 string wwwRootPath = _hostEnvironment.WebRootPath;
+
+                //Check if the product already have a file
+                if (model.Product.ImageUrl != null && file != null)
+                {
+                    //Get the file path for the file on database
+                    var oldImagePath = Path.Combine(wwwRootPath, model.Product.ImageUrl.TrimStart('\\'));
+                    //Check if the file exists
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        //Delete the file before updating
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
 
                 if (file != null)
                 {
@@ -84,12 +95,18 @@ namespace eCommerceWebApp.Controllers
                     model.Product.ImageUrl = @"\images\products\" + fileName + extension;
 
                 }
-
-                _unitOfWork.Product.Add(model.Product);
-
+                if (model.Product.Id==0)
+                {
+                    _unitOfWork.Product.Add(model.Product);
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(model.Product);
+                }
+                
                 _unitOfWork.Save();
 
-                TempData["success"] = "Product Created Succesfully";
+                TempData["success"] = "Product Updated Succesfully";
 
                 return RedirectToAction("Index");
             }
@@ -97,46 +114,69 @@ namespace eCommerceWebApp.Controllers
             return View(model);
         }
 
+        //[HttpGet]
+        //public IActionResult DeleteCategory(int? Id)
+        //{
+        //    if (Id == null || Id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    Category category = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == Id);
+        //    //Category category = _dbContext.Categories.FirstOrDefault(c => c.Id==Id);
+        //    //Category category = _dbContext.Categories.SingleOrDefault(c => c.Id==Id);
+
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(category);
+
+        //}
+
+        
+        #region API CALLS
+
         [HttpGet]
-        public IActionResult DeleteCategory(int? Id)
+        public IActionResult GetAllProducts()
         {
-            if (Id == null || Id == 0)
-            {
-                return NotFound();
-            }
+            var productList = _unitOfWork.Product.GetAll(includeProperties:"Category,Tag");
 
-            Category category = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == Id);
-            //Category category = _dbContext.Categories.FirstOrDefault(c => c.Id==Id);
-            //Category category = _dbContext.Categories.SingleOrDefault(c => c.Id==Id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-
+            return Json(new {data=productList});
         }
 
-        [HttpPost, ActionName("DeleteCategory")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteCategory(Category model)
+        [HttpDelete]
+        public IActionResult DeleteProduct(int? id)
         {
-            if (model == null)
+
+            var productFromDb = _unitOfWork.Product.GetFirstOrDefault(c => c.Id == id);
+
+            if (productFromDb == null)
             {
-                return NotFound();
+                return Json(new {success=false, message="Error while deleting"});
             }
 
-            var obj = _unitOfWork.Category.GetFirstOrDefault(c => c.Id == model.Id);
+            //Get the file path for the file on database
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, productFromDb.ImageUrl.TrimStart('\\'));
+            //Check if the file exists
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                //Delete the file before updating
+                System.IO.File.Delete(oldImagePath);
+            }
 
-            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Product.Remove(productFromDb);
 
             _unitOfWork.Save();
 
-            TempData["success"] = "Category Deleted Succesfully";
+            //TempData["success"] = "Category Deleted Succesfully";
 
-            return RedirectToAction("Index");
+            return Json(new {success=true, message="Product deleted successfully"});
 
         }
+
+        #endregion
+
     }
 }
