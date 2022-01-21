@@ -36,6 +36,9 @@ namespace eCommerceWebApp.Controllers
             return View(shoppingCart);
         }
 
+
+
+
         public IActionResult Privacy()
         {
             return View();

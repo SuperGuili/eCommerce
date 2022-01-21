@@ -24,10 +24,10 @@
                             <p class="card-title text-info text-center bg-light">@prod.Tag.TagName</p>
                         </div>
                         <div class="">
-                            <p class="card-title text-danger text-end mx-2">£ @prod.ListPrice.ToString("0.00")</p>
+                            <p class="card-title text-danger text-end mx-2">List price: <strike>@prod.ListPrice.ToString("c")</strike></p>
                         </div>
                         <div class="">
-                            <p class="card-title text-info text-end mx-2">As low as: £ @prod.Price20.ToString("0.00")</p>
+                            <p class="card-title text-info text-end mx-2">As low as: @prod.Price20.ToString("c")</p>
                         </div>
                     </div>
 

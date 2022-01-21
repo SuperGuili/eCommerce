@@ -13,5 +13,6 @@ namespace eCommerce.Models
 
         [Range(1,99, ErrorMessage ="Please enter a quantity between 1 and 99.")]
         public int Count { get; set; }
+
     }
 }
