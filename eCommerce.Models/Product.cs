@@ -58,8 +58,21 @@ namespace eCommerce.Models
         [Display(Name ="Tag")]
         public int TagId { get; set; }
 
-        [ForeignKey("TagId")]
+        
+        [Display(Name = "Tag 2")]
+        public int? TagId2 { get; set; } = 0;
+
+
+        [Display(Name = "Tag 3")]
+        public int? TagId3 { get; set; } = 0;
+
         [ValidateNever]
-        public Tag  Tag { get; set; }
+        [ForeignKey("TagId")]
+        public Tag Tag { get; set; }
+
+        [Required]
+        [Display(Name = "Brand")]
+        public string Brand { get; set; }
+
     }
 }

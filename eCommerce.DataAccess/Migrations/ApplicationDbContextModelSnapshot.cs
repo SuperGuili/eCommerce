@@ -42,7 +42,7 @@ namespace eCommerceWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("eCommerce.Models.Product", b =>
@@ -52,6 +52,10 @@ namespace eCommerceWebApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -86,13 +90,19 @@ namespace eCommerceWebApp.Migrations
                     b.Property<int>("TagId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TagId2")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId3")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("eCommerce.Models.Tag", b =>
@@ -106,6 +116,9 @@ namespace eCommerceWebApp.Migrations
                     b.Property<DateTime>("TagCreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<double>("TagDiscountPCent")
+                        .HasColumnType("float");
+
                     b.Property<DateTime>("TagEditedDateTime")
                         .HasColumnType("datetime2");
 
@@ -115,7 +128,7 @@ namespace eCommerceWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("eCommerce.Models.Product", b =>

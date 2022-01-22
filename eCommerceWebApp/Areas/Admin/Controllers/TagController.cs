@@ -35,7 +35,8 @@ namespace eCommerceWebApp.Controllers
             {
                 Tag tag = new Tag
                 {
-                    TagName = model.TagName                    
+                    TagName = model.TagName,
+                    TagDiscountPCent = model.TagDiscountPCent
                 };
 
                 _unitOfWork.Tag.Add(tag);

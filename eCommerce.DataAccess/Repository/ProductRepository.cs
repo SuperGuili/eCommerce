@@ -27,6 +27,9 @@ namespace eCommerce.DataAccess.Repository
                 productFromDb.StockQuantity = model.StockQuantity;
                 productFromDb.CategoryId = model.CategoryId;
                 productFromDb.TagId = model.TagId;
+                productFromDb.TagId2 = model.TagId2;
+                productFromDb.TagId3 = model.TagId3;
+                productFromDb.Brand = model.Brand;
 
                 if (model.ImageUrl != null)
                 {

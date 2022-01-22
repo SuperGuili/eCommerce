@@ -14,10 +14,11 @@ function loadDataTable() {
             "url":"/Admin/Product/GetAllProducts"
         },
         "columns": [
-            { "data": "productName", "width": "35%" },
+            { "data": "productName", "width": "30%" },
+            { "data": "brand", "width": "10%" },
             { "data": "stockQuantity", "width": "5%" },
             { "data": "price", "width": "10%" },
-            { "data": "category.categoryName", "width": "15%" },
+            { "data": "category.categoryName", "width": "10%" },
             { "data": "tag.tagName", "width": "10%" },
             //Add buttons to the last column
             {
@@ -27,15 +28,18 @@ function loadDataTable() {
                     return ` 
                         <div class="btn-group w-75" role="group">
                             <a href="/Admin/Product/UpsertProduct?id=${data}"
-                                class="btn btn-info btn-sm mx-2"> <i class="bi bi-pencil-square"></i>&nbsp;Edit
+                                class="btn btn-info btn-sm "> <i class="bi bi-pencil-square"></i>&nbsp;Edit
                             </a>
-                            <a class="btn btn-danger btn-sm mx-2" onClick="DeleteProduct('/Admin/Product/DeleteProduct/${data}')">
+                            <a href="/Customer/Home/DetailsProduct?id=${data}"
+                                class="btn btn-primary btn-sm "><i class="bi bi-zoom-in"></i>&nbsp;Details
+                            </a>
+                            <a class="btn btn-danger btn-sm " onClick="DeleteProduct('/Admin/Product/DeleteProduct/${data}')">
                                 <i class="bi bi-trash"></i>&nbsp;Delete
                             </a>
                         </div>
                     `
                 },
-                "width": "30%"
+                "width": "25%"
             }
         ]
     });

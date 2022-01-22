@@ -12,11 +12,13 @@
     <div class="card-header bg-primary text-light ml-0 row">
         <div class="col-12 col-md-6">
             <h2 class="text-white-50">@Model.Product.ProductName</h2>
-            <h5 class="text-white-50">@Model.Product.ProductName</h5>
+            <h5 class="text-white-50">@Model.Product.Brand</h5>
         </div>
         <div class="text-end col-12 col-md-6 pt-4">
             <span class="badge bg-info pt-2" style="height:30px;">@Model.Product.Category.CategoryName</span>
             <span class="badge bg-warning pt-2" style="height:30px;">@Model.Product.Tag.TagName</span>
+            <span class="badge bg-warning pt-2" style="height:30px;">@ViewBag.Tag2</span>
+            <span class="badge bg-warning pt-2" style="height:30px;">@ViewBag.Tag3</span>
         </div>
     </div>
 

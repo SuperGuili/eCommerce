@@ -20,6 +20,11 @@
                     <span asp-validation-for="Product.ProductName" class="text-danger"></span>
                 </div>
                 <div class="mb-3 ">
+                    <label asp-for="Product.Brand"></label>
+                    <input asp-for="Product.Brand" class="form-control" />
+                    <span asp-validation-for="Product.Brand" class="text-danger"></span>
+                </div>
+                <div class="mb-3 ">
                     <label asp-for="Product.ProductDescription"></label>
                     <textarea asp-for="Product.ProductDescription" rows="3" class="form-control" id="textArea"></textarea>
                     <span asp-validation-for="Product.ProductDescription" class="text-danger"></span>
@@ -66,6 +71,20 @@
                         <option disabled selected>--Select Tag--</option>
                     </select>
                     <span asp-validation-for="Product.TagId" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.TagId2"></label>
+                    <select asp-for="Product.TagId2" asp-items="@Model.TagList" class="form-select">
+                        <option value=0 selected>--Select Tag2--</option>
+                    </select>
+                    <span asp-validation-for="Product.TagId2" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Product.TagId3"></label>
+                    <select asp-for="Product.TagId3" asp-items="@Model.TagList" class="form-select">
+                        <option value=0 selected>--Select Tag3--</option>
+                    </select>
+                    <span asp-validation-for="Product.TagId3" class="text-danger"></span>
                 </div>
                 <div class="row pb-3">
                     <hr />

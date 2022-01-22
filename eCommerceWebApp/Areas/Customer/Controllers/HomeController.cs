@@ -29,9 +29,18 @@ namespace eCommerceWebApp.Controllers
         {
             ShoppingCart shoppingCart = new()
             {
-                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id, includeProperties: "Category,Tag"),
+                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id, includeProperties: "Category,Tag"),                
                 Count = 1
             };
+
+            if(shoppingCart.Product.TagId2 != 0)
+            {
+                ViewBag.Tag2 = _unitOfWork.Tag.GetFirstOrDefault(t => t.Id == shoppingCart.Product.TagId2).TagName;
+            }
+            if (shoppingCart.Product.TagId3 != 0)
+            {
+                ViewBag.Tag3 = _unitOfWork.Tag.GetFirstOrDefault(t => t.Id == shoppingCart.Product.TagId3).TagName;
+            }
 
             return View(shoppingCart);
         }

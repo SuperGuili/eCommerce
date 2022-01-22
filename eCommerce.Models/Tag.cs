@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eCommerce.Models
 {
@@ -10,6 +11,10 @@ namespace eCommerce.Models
         [Required]
         [Display(Name = "Tag Name")]
         public string TagName { get; set; }
+
+        [Required]
+        [Display(Name = "Tag Discount")]
+        public double TagDiscountPCent { get; set; } = 0;
 
         [Display(Name = "Created Tag Date")]
         public DateTime TagCreatedDateTime { get; set; } = DateTime.Now;
