@@ -1,0 +1,75 @@
+﻿@model Company
+
+@{
+    ViewData["Title"] = "Company Details";
+}
+
+<h1 class="text-primary text-center mt-3">Details of @Model.Name</h1>
+<hr />
+
+<div class="card container pt-4">
+
+    <div class="card-header bg-primary text-light ml-0 row">
+        <div class="col-8">
+            <h2 class="text-white-50">@Model.Name</h2>
+            <h5 class="text-white-50">@Model.City</h5>
+        </div>
+        <div class="col-4">
+            <h1 class="text-white-50 text-end">@Model.PhoneNumber</h1>
+        </div>
+    </div>
+
+    <div class="card-body row container">
+        <div class="container rounded p-2">
+            <div class="row">
+                <div class="col-8 col-lg-8">
+
+                    <div class="row pl-2">
+                        <div class="col-4">
+                            <label class="text-muted text-end" asp-for=Address></label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-muted text-end">@Model.Address</h4>
+                        </div>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="col-4">
+                            <label class="text-muted text-end" asp-for=PostCode></label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-muted text-end">@Model.PostCode</h4>
+                        </div>
+                    </div>
+                    <div class="row pl-2">
+                        <div class="col-4">
+                            <label class="text-muted text-end" asp-for=City></label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="text-muted text-end">@Model.City</h4>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-12 col-md-6 pb-1">
+                <a class="btn btn-success form-control pt-2" style="height:45px;" asp-action="Index">
+                        <i class="bi bi-backspace"></i>&nbsp;Back to List                   
+                </a>
+            </div>
+            <div class="col-12 col-md-6 pb-1">
+                <a class="btn btn-primary form-control" style="height:45px;" asp-action="UpsertCompany" asp-route-id="@Model.Id">
+                    <i class="bi bi-cart-plus"></i>&nbsp;Edit Company
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

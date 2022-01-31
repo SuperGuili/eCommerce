@@ -1,0 +1,70 @@
+﻿@model eCommerce.Models.Company
+
+<form method="post" asp-action="UpsertCompany">
+    <input asp-for="Id" hidden />
+
+
+    <div class="row ">
+        <div class="col-12">
+            <div class="border p-3 mt-4 row">
+
+                <div class="col-12 pb-2">
+                    <h2 class=text-primary>@(Model.Id!=0?"Update":"Create") Company</h2>
+                    <hr />
+                </div>
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="mb-3 ">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3 ">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="mb-3 ">
+                    <label asp-for="City"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="PostCode"></label>
+                    <input asp-for="PostCode" class="form-control" />
+                    <span asp-validation-for="PostCode" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="row pb-3">
+                    <hr />
+                </div>
+                <div class="col-12">
+                    @if (Model.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-success" style="width:175px"><i class="bi bi-plus-circle"></i>&nbsp;Update Company</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-success" style="width:175px"><i class="bi bi-plus-circle"></i>&nbsp;Create Company</button>
+
+                    }
+                    <a class="btn btn-danger" style="width:175px" asp-controller="Company" asp-action="Index">
+                        <i class="bi bi-skip-backward-circle"></i>&nbsp; Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+}
