@@ -20,13 +20,13 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
-            <div class="form-floating py-2 col-6">
+            <div class="form-floating py-2 col-8">
                 <input asp-for="Input.Name" class="form-control" aria-required="true" />
                 <label asp-for="Input.Name"></label>
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>            
 
-             <div class="form-floating py-2 col-6">
+             <div class="form-floating py-2 col-4">
                 <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" />
                 <label asp-for="Input.PhoneNumber"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
@@ -36,15 +36,27 @@
                 <label asp-for="Input.Address"></label>
                 <span asp-validation-for="Input.Address" class="text-danger"></span>
             </div>
-            <div class="form-floating py-2 col-6">
+            <div class="form-floating py-2 col-4">
                 <input asp-for="Input.PostCode" class="form-control" aria-required="true" />
                 <label asp-for="Input.PostCode"></label>
                 <span asp-validation-for="Input.PostCode" class="text-danger"></span>
             </div>
-            <div class="form-floating py-2 col-6">
+            <div class="form-floating py-2 col-8">
                 <input asp-for="Input.City" class="form-control" aria-required="true" />
                 <label asp-for="Input.City"></label>
                 <span asp-validation-for="Input.City" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating py-2 col-6">                
+                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
+                    <option disabled selected>-Select Role-</option>
+                </select>
+            </div>
+
+            <div class="form-floating py-2 col-6">                
+                <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select" style="display:none">
+                    <option disabled selected>-Select Company-</option>
+                </select>
             </div>
 
             <div class="form-floating py-2 col-6">
@@ -52,6 +64,7 @@
                 <label asp-for="Input.Password"></label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
+
             <div class="form-floating py-2 col-6">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
                 <label asp-for="Input.ConfirmPassword"></label>
@@ -98,4 +111,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function(){
+            $('#Input_Role').change(function(){
+                var selection = $('#Input_Role Option:Selected').text();
+                if(selection != 'Company'){
+                    $('#Input_CompanyId').hide();
+                }else{
+                    $('#Input_CompanyId').show();
+                }
+            })
+        })
+    </script>
 }
