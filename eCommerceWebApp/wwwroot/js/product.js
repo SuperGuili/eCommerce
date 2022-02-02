@@ -30,7 +30,7 @@ function loadDataTable() {
                             <a href="/Admin/Product/UpsertProduct?id=${data}"
                                 class="btn btn-info btn-sm "> <i class="bi bi-pencil-square"></i>&nbsp;Edit
                             </a>
-                            <a href="/Customer/Home/DetailsProduct?id=${data}"
+                            <a href="/Customer/Home/DetailsProduct?productId=${data}"
                                 class="btn btn-primary btn-sm "><i class="bi bi-zoom-in"></i>&nbsp;Details
                             </a>
                             <a class="btn btn-danger btn-sm " onClick="DeleteProduct('/Admin/Product/DeleteProduct/${data}')">

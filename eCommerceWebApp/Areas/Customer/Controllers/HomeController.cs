@@ -1,8 +1,10 @@
 ﻿using eCommerce.DataAccess.Repository.IRepository;
 using eCommerce.Models;
 using eCommerce.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace eCommerceWebApp.Controllers
 {
@@ -25,11 +27,13 @@ namespace eCommerceWebApp.Controllers
             return View(productList);
         }
 
-        public IActionResult DetailsProduct(int id)
+        [HttpGet]
+        public IActionResult DetailsProduct(int productId)
         {
             ShoppingCart shoppingCart = new()
             {
-                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id, includeProperties: "Category,Tag"),                
+                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == productId, includeProperties: "Category,Tag"),
+                ProductId = productId,
                 Count = 1
             };
 
@@ -45,7 +49,38 @@ namespace eCommerceWebApp.Controllers
             return View(shoppingCart);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult DetailsProduct(ShoppingCart model)
+        {
+            //Workaround to avoid changing the product table error
+            model.Product = null;
 
+            // Procedure to get the user ID
+            var clainsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = clainsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            //Add User ID to the shopping cart
+            model.ApplicationUserId = claim.Value;
+
+            //Check for an existing shoppingCart 
+            ShoppingCart shoppingCartDB = _unitOfWork.ShoppingCart.GetFirstOrDefault(
+                u=> u.ApplicationUserId == claim.Value && u.ProductId == model.ProductId
+                );
+
+            if (shoppingCartDB == null)
+            {
+                _unitOfWork.ShoppingCart.Add(model);
+            }
+            else
+            {
+                _unitOfWork.ShoppingCart.IncrementCount(shoppingCartDB, model.Count);
+            }
+
+            _unitOfWork.Save();
+
+            return RedirectToAction("Index");
+        }
 
 
         public IActionResult Privacy()
