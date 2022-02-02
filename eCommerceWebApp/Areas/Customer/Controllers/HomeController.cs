@@ -79,7 +79,7 @@ namespace eCommerceWebApp.Controllers
 
             _unitOfWork.Save();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
 
