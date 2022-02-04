@@ -103,8 +103,10 @@
                             <p style="color:maroon; font-size:14px;">Estimate Arrival Date: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
                         </div>
                         <div class="col-12 col-md-4">
-
-                            <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
+                            <button asp-action="Summary" asp-controller="Cart"
+                                    type="submit" class="btn btn-success form-control">
+                                <i class="bi bi-credit-card"></i>&nbsp; Place Order
+                            </button>
                         </div>
                     </div>
                 </div>
