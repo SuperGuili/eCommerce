@@ -40,9 +40,9 @@ namespace eCommerce.Models
         public DateTime PaymentDueDate { get; set; }
 
 
-        // -- to track the 3rd party payment 
+        // -- to track the 3rd party payment Stripe
         public string? SessionId { get; set; }
-        // -- to track the 3rd party payment
+        // -- to track the 3rd party payment Stripe
         public string? PaymentIntentId { get; set; }
 
 

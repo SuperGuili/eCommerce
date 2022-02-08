@@ -1,5 +1,8 @@
 ﻿@model eCommerce.Models.ViewModels.ShoppingCartVM
+@using Microsoft.Extensions.Options  @*To use IOptions for Stripe*@
 
+@*Use IOptions to inject the Stripe keys*@
+@inject IOptions<eCommerce.Utility.StripeSettings> Stripe
 
 <form method="post">
     <br />

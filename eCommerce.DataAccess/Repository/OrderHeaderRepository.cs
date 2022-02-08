@@ -35,5 +35,16 @@ namespace eCommerce.DataAccess.Repository
                 }
             }
         }
+
+        public void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId)
+        {
+            OrderHeader orderHeaderFromDB = _db.OrderHeaders.FirstOrDefault(o => o.Id == id);
+
+            if (orderHeaderFromDB != null)
+            {
+                orderHeaderFromDB.SessionId = sessionId;
+                orderHeaderFromDB.PaymentIntentId = paymentIntentId;
+            }
+        }
     }
 }

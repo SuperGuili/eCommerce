@@ -4,6 +4,7 @@ using eCommerce.Models.ViewModels;
 using eCommerce.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace eCommerceWebApp.Areas.Customer.Controllers
@@ -20,7 +21,7 @@ namespace eCommerceWebApp.Areas.Customer.Controllers
 
         public CartController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork; 
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -117,19 +118,97 @@ namespace eCommerceWebApp.Areas.Customer.Controllers
                     OrderId = ShoppingCartVM.OrderHeader.Id,
                     ProductId = cart.ProductId,
                     Price = cart.Price,
-                    Count = cart.Count                    
+                    Count = cart.Count
                 };
 
                 _unitOfWork.OrderDetail.Add(orderDetail);
                 _unitOfWork.Save();
             }
 
-            //Remove the items from the ShoppingCart database
-            _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
+            //--- Stripe payment code for checkout ----//
+
+            var domain = "https://localhost:44352/"; //Needs implementation of IWebHostEnvironment
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                {
+                    "card"
+                },
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain+$"customer/cart/OrderConfirmation?OrderHeaderId={ShoppingCartVM.OrderHeader.Id}", //Passing the OrderHeader ID
+                CancelUrl = domain + $"customer/cart/Index",
+            };
+
+            foreach (var item in ShoppingCartVM.ListCart)
+            {
+
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        // Unit amount is INT -> needs to convert (20.00 -> 2000)
+                        UnitAmount = (long)(item.Price*100),
+                        Currency = "gbp",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.ProductName,
+                        },
+
+                    },
+                    Quantity = item.Count,
+                };
+                //Add item to LineItems
+                options.LineItems.Add(sessionLineItem);
+            }
+
+            var service = new SessionService();
+            //create the final Session service with all the options
+            Session session = service.Create(options);
+
+            // Fill details from payment in OrderHeader
+            //ShoppingCartVM.OrderHeader.SessionId = session.Id;
+            //ShoppingCartVM.OrderHeader.PaymentIntentId = session.PaymentIntentId;
+
+            _unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
             _unitOfWork.Save();
 
-            return RedirectToAction("Index", "Home");
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303); // Redirect to stripe portal
 
+
+
+            //Remove the items from the ShoppingCart database
+            //_unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
+            //_unitOfWork.Save();
+
+            //return RedirectToAction("Index", "Home");
+
+        }
+
+        public IActionResult OrderConfirmation(int OrderHeaderId)
+        {
+            OrderHeader orderHeaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(o => o.Id == OrderHeaderId);                      
+
+            //Create a session service
+            var service = new SessionService();
+            //Get the Session from stripe with sessionID
+            Session session = service.Get(orderHeaderFromDb.SessionId);
+
+            //Check stripe status and payment successfull
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.OrderHeader.UpdateStatus(OrderHeaderId, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
+                _unitOfWork.Save();
+            }
+            //Load the shoppingcart List from Db to be removed
+            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == orderHeaderFromDb.ApplicationUserId).ToList();
+            //Remove the items from the ShoppingCart database
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            _unitOfWork.Save();
+
+            return View(OrderHeaderId);
         }
 
         public IActionResult Plus(int cartId)
@@ -144,7 +223,7 @@ namespace eCommerceWebApp.Areas.Customer.Controllers
             else
             {
                 TempData["error"] = "Maximum quantity available in stock";
-            }            
+            }
 
             return RedirectToAction(nameof(Index));
 
@@ -161,7 +240,7 @@ namespace eCommerceWebApp.Areas.Customer.Controllers
             else
             {
                 _unitOfWork.ShoppingCart.DecrementCount(cartFromDb, 1);
-            }           
+            }
 
             _unitOfWork.Save();
 
@@ -184,7 +263,7 @@ namespace eCommerceWebApp.Areas.Customer.Controllers
 
         public double GetPriceBasedOnQuantity(double quantity, double price, double price10, double price20)
         {
-            if (quantity <=10)
+            if (quantity <= 10)
             {
                 return price;
             }
